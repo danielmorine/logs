@@ -2,7 +2,8 @@
 
 # dependencies
 /.vs
-/reg/bin
-/reg/obj
+*/bin
+*/obj
+*/appsettings.json
 
 /reg/Properties/PublishProfiles
