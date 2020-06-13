@@ -1,0 +1,11 @@
+# See https://help.github.com/ignore-files/ for more about ignoring files.
+
+# dependencies
+/.vs
+/reg.Web/bin
+/reg.Web/obj
+
+/reg.Repository/bin
+/reg.Repository/obj
+
+/reg.Web/Properties/PublishProfiles
