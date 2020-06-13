@@ -2,10 +2,7 @@
 
 # dependencies
 /.vs
-/reg.Web/bin
-/reg.Web/obj
+/reg/bin
+/reg/obj
 
-/reg.Repository/bin
-/reg.Repository/obj
-
-/reg.Web/Properties/PublishProfiles
+/reg/Properties/PublishProfiles
