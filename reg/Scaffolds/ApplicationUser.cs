@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using reg.Scaffolds.interfaces;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -6,7 +7,7 @@ using System.Text;
 
 namespace Scaffolds
 {
-    public class ApplicationUser : IdentityUser
+    public class ApplicationUser : IdentityUser, IScaffold<Guid>
     {
         [NotMapped]
         public Guid ID
@@ -22,6 +23,8 @@ namespace Scaffolds
         }
 
         public string Name { get; set; }
+
+        public DateTimeOffset CreatedDate { get; set; }
 
         [NotMapped]
         public string PasswordComparer { get; set; }

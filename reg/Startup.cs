@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using reg.Extensions.IOC;
 using Scaffolds;
 
 namespace reg
@@ -34,6 +35,8 @@ namespace reg
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
+
+            services.RepositoryIOC().ServiceIOC();
 
             services.AddMvc();
             services.AddHttpContextAccessor(); ;

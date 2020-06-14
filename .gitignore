@@ -1,5 +1,5 @@
 /.vs
 
-*/bin
-*/obj
-**/appsettings.json
+reg/bin
+reg/obj
+reg/appsettings.json
