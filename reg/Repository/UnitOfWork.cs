@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace reg.Repository
 {
-    public class UnitOfWork
+    public class UnitOfWork : IUnitOfWork
     {
         private readonly IApplicationDbContext _applicationDbContext;
         private bool _disposed = false;
