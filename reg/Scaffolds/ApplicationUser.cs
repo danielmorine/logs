@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using reg.Scaffolds;
 using reg.Scaffolds.interfaces;
 using System;
 using System.Collections.Generic;
@@ -28,6 +29,8 @@ namespace Scaffolds
 
         [NotMapped]
         public string PasswordComparer { get; set; }
+
+        public virtual RegistrationProcess RegistrationProcess { get; set; }
 
     }
 }
