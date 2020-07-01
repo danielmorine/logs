@@ -23,6 +23,7 @@ namespace Scaffolds
             }
         }
 
+
         public string Name { get; set; }
         public DateTimeOffset CreatedDate { get; set; }
 
