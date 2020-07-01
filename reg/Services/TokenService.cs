@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using reg.Configurations;
 using Scaffolds;
 using System;
 using System.Collections.Generic;
@@ -21,15 +20,13 @@ namespace reg.Services
         private readonly string _audience;
         private readonly int _seconds;
         private readonly string _key;
-        private readonly SigningConfiguration _signingConfigurations;
 
-        public TokenService(IConfiguration configuration, SigningConfiguration signingConfigurations)
+        public TokenService(IConfiguration configuration)
         {
             _seconds = configuration.GetValue<int>("TokenConfiguration:Seconds");
             _issuer = configuration.GetValue<string>("TokenConfiguration:Issuer");
             _audience = configuration.GetValue<string>("TokenConfiguration:Audience");
             _key = configuration.GetValue<string>("TokenConfiguration:Secret");
-            _signingConfigurations = signingConfigurations;
         }
 
         public string GetToken(ApplicationUser user)
