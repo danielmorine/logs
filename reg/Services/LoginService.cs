@@ -16,23 +16,26 @@ namespace reg.Services
     public class LoginService : ILoginService
     {
         private readonly ITokenService _tokenService;
-        private readonly SignInManager<ApplicationUser> _userManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public LoginService(ITokenService tokenService, SignInManager<ApplicationUser> userManager)
+        public LoginService(ITokenService tokenService, SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager)
         {
             _tokenService = tokenService;
             _userManager = userManager;
+            _signInManager = signInManager;
         }
 
         public async Task<string> LoginAsync(LoginModel model)
         {
-            var result = await _userManager.PasswordSignInAsync(model.Email, model.Password, true, true);
+            var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, true, true);
             if (result == null)
             {
                 throw new CustomException("Email ou senha inválida");
             }
+            var user = await _userManager.FindByEmailAsync(model.Email);
 
-            return _tokenService.GetToken(new ApplicationUser { });
+            return _tokenService.GetToken(user);
         }
     }
 }

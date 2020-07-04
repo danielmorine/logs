@@ -8,7 +8,9 @@ package greet;
 service Greeter {
   // Sends a greeting
   rpc SayHello (HelloRequest) returns (HelloReply);
-  rpc SendLevelType (LevelTypeRequest) returns(LevelTypeReply);
+  rpc SendRegistrationProcess (RegistrationProcessRequest) returns (DefaultResponse);
+  rpc SendValidateEnvironmentTypeRequest (ValidateEnvironmentTypeRequest) returns (DefaultResponse);
+  rpc SendValidateLevelTypeRequest (ValidateLevelTypeRequest) returns (DefaultResponse);
 }
 
 // The request message containing the user's name.
@@ -21,12 +23,24 @@ message HelloReply {
   string message = 1;
 }
 
-message LevelTypeRequest {
-	string name = 1;
-	string normalized = 2;
+message RegistrationProcessRequest {
+	string title = 1;
+	string reportDescription = 2;
+	string reportSource = 3;
+	int32 levelTypeID = 4;
+	int32 events = 5;
+	int32 environmentTypeID = 6;
+	string OwnerID = 7;
 }
 
-message LevelTypeReply {
+message DefaultResponse { 
 	bool status = 1;
 }
 
+message ValidateEnvironmentTypeRequest {
+	int32 environmentTypeID = 1;
+}
+
+message ValidateLevelTypeRequest {
+	int32 levelTypeID = 1;
+}
