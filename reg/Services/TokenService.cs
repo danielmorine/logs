@@ -43,23 +43,11 @@ namespace reg.Services
             var securityToken = new JwtSecurityToken(
               issuer: _issuer,
               audience: _audience,
-              expires: DateTime.UtcNow.AddDays(20),
+              expires: DateTime.UtcNow.AddSeconds(_seconds),
               signingCredentials: new SigningCredentials(new SymmetricSecurityKey(key),
               SecurityAlgorithms.HmacSha256Signature),
               claims: claims
             );
-
-
-            //var securityToken = handler.CreateToken(new SecurityTokenDescriptor 
-            //{
-            //    Audience = _audience,
-            //    Expires = DateTime.UtcNow.AddSeconds(_seconds),
-            //    NotBefore= DateTime.UtcNow,
-            //    Issuer = _issuer,
-            //    SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), 
-            //    SecurityAlgorithms.HmacSha256Signature),
-            //    Claims = claims
-            //});
 
             return handler.WriteToken(securityToken);
         }

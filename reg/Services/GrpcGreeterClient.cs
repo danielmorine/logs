@@ -39,6 +39,9 @@ namespace reg.Services
             using (var channel = GrpcChannel.ForAddress(_url))
             {
                 var client = new Greeter.GreeterClient(channel);
+
+                await ValidateFilters(model, client);
+
                 var reply = await client.FilterRegistrationProcessAsync(new FilterRegistrationProcessRequest 
                 {
                     EnvFilter = model.EnvironmentTypeID.HasValue ? model.EnvironmentTypeID.ToString() : string.Empty,
@@ -91,7 +94,6 @@ namespace reg.Services
                 throw new CustomException("Não foi possível arquivar");
             }
         }
-
         public async Task DeleteAsync(RegistrationProcessDeleteModel model)
         {
             using var channel = GrpcChannel.ForAddress("https://localhost:5001");
@@ -112,7 +114,6 @@ namespace reg.Services
                 throw new CustomException("Não foi possível deletar");
             }
         }
-
         public async Task AddRegistrationProcessAsync(RegistrationProcessModel model)
         {
             using var channel = GrpcChannel.ForAddress("https://localhost:5001");
@@ -137,7 +138,6 @@ namespace reg.Services
                 throw new CustomException("Não foi possível inserir este registro");
             }
         }  
-
         public async Task<RegistrationProcessByIdQuery> GetByID(Guid? registrationProcessID)
         {
             if (!registrationProcessID.HasValue)
@@ -266,6 +266,31 @@ namespace reg.Services
         {
             var result = await client.SendValidateLevelTypeRequestAsync(new ValidateLevelTypeRequest {LevelTypeID = levelTypeID });
             return result.Status;
+        }
+        private async Task ValidateFilters(RegistrationProcessFilterModel model, Greeter.GreeterClient client)
+        {
+            if (model == null)
+            {
+                throw new CustomException("É necessário informar pelo menos um filtro");
+            } else if (model.EnvironmentTypeID.HasValue && !await ValidateEnvironmentTypeAsync((byte)model.EnvironmentTypeID.Value, client))
+            {
+                throw new CustomException("EnvironmentTypeID não é válido");
+            } else if (model.LevelTypeID.HasValue && !await ValidateLevelTypeAsync((byte)model.LevelTypeID.Value, client))
+            {
+                throw new CustomException("LevelTypeID não é válido");
+            } else if (!string.IsNullOrEmpty(model.OrderBy) && model.OrderBy.Length > 8 && !model.OrderBy.ToLower().Equals("events") && model.OrderBy.ToLower().Equals("level"))
+            {
+                throw new CustomException("O campo OrderBy aceita apenas dois valores: level ou events");
+            } else if (!string.IsNullOrEmpty(model.SortDirection) && !model.SortDirection.ToLower().Equals("asc") && !model.SortDirection.ToLower().Equals("desc"))
+            {
+                throw new CustomException("O campo SortDirection aceita apenas dois valores: asc ou desc");
+            } else if(!string.IsNullOrEmpty(model.SearchValue) && model.SearchValue.Length > 15)
+            {
+                throw new CustomException("O campo SearchValue pode conter no máximo 15 caracteres");
+            } else if (!string.IsNullOrEmpty(model.SearchType) && !model.SearchType.ToLower().Equals("reportsource") && !model.SearchType.ToLower().Equals("reportdescription"))
+            {
+                throw new CustomException("O campo SearchType aceita apenas dois valores: reportSource ou reportDescription");
+            }
         }
     }
 }
