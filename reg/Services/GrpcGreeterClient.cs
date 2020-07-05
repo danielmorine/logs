@@ -16,10 +16,12 @@ namespace reg.Services
 {
     public interface IGrpcGreeterClient
     {
-        Task Say();
         Task AddRegistrationProcessAsync(RegistrationProcessModel model);
         Task<IEnumerable<RegistrationProcessQuery>> GetAllAsync();
         Task<RegistrationProcessByIdQuery> GetByID(Guid? RegistrationProcessID);
+        Task ArchiveAsync(RegistrationProcessArchiveModel model);
+        Task DeleteAsync(RegistrationProcessDeleteModel model);
+
     }
     public class GrpcGreeterClient : IGrpcGreeterClient
     {
@@ -29,6 +31,47 @@ namespace reg.Services
         public GrpcGreeterClient(UserManager<ApplicationUser> userManager)
         {
             _userManager = userManager;
+        }
+        public async Task ArchiveAsync(RegistrationProcessArchiveModel model)
+        {
+            using var channel = GrpcChannel.ForAddress("https://localhost:5001");
+            var client = new Greeter.GreeterClient(channel);
+
+            await ValidateArrayList(model, client);
+            var archive = new ArchiveRequest();
+
+            foreach (var value in model.IDs)
+            {
+                archive.List.Add( new ArchiveRequestObject { Id = value.ToString() });
+            }          
+
+            var reply = await client.ArchiveAsync(archive);
+
+            if (!reply.Status)
+            {
+                throw new CustomException("Não foi possível arquivar");
+            }
+        }
+
+        public async Task DeleteAsync(RegistrationProcessDeleteModel model)
+        {
+            using var channel = GrpcChannel.ForAddress("https://localhost:5001");
+            var client = new Greeter.GreeterClient(channel);
+
+            await ValidateArrayList(model, client);
+            var deleteRequest = new DeleteRequest();
+
+            foreach (var value in model.IDs)
+            {
+                deleteRequest.List.Add(new ArchiveRequestObject { Id = value.ToString() });
+            }
+
+            var reply = await client.DeleteAsync(deleteRequest);
+
+            if (!reply.Status)
+            {
+                throw new CustomException("Não foi possível deletar");
+            }
         }
 
         public async Task AddRegistrationProcessAsync(RegistrationProcessModel model)
@@ -55,16 +98,6 @@ namespace reg.Services
                 throw new CustomException("Não foi possível inserir este registro");
             }
         }  
-
-        public async Task Say()
-        {
-            // The port number(5001) must match the port of the gRPC server.
-            using var channel = GrpcChannel.ForAddress("https://localhost:5001");
-            var client = new Greeter.GreeterClient(channel);
-
-            //var reply = await client.SayHelloAsync(new HelloRequest { Name = "GreeterClient" });
-            //var daniel = reply;        
-        }
 
         public async Task<RegistrationProcessByIdQuery> GetByID(Guid? registrationProcessID)
         {
@@ -96,7 +129,6 @@ namespace reg.Services
             };
 
         }
-
         public async Task<IEnumerable<RegistrationProcessQuery>> GetAllAsync()
         {
             using var channel = GrpcChannel.ForAddress(_url);
@@ -124,6 +156,30 @@ namespace reg.Services
                 }
             }
             return list;
+        }
+        private async Task ValidateArrayList(RegistrationProcessArchiveModel model, Greeter.GreeterClient client)
+        {
+            if (model.IDs.ToArray().Length == 0)
+            {
+                throw new CustomException("Não foi encontrado nenhum ID");
+            }
+
+            foreach (var value in model.IDs)
+            {
+                await ValidateRegistrationProcessID(value, client);
+            }
+        }
+        private async Task ValidateArrayList(RegistrationProcessDeleteModel model, Greeter.GreeterClient client)
+        {
+            if (model.IDs.ToArray().Length == 0)
+            {
+                throw new CustomException("Não foi encontrado nenhum ID");
+            }
+
+            foreach (var value in model.IDs)
+            {
+                await ValidateRegistrationProcessID(value, client);
+            }
         }
         private async Task ValidateRegistrationProcessID(Guid registrationProcessID, Greeter.GreeterClient client)
         {
@@ -159,13 +215,11 @@ namespace reg.Services
                 throw new CustomException("O valor de LevelTypeID não é válido");
             }
         }
-
         private async Task<bool> ValidateEnvironmentTypeAsync(byte environmentTypeID, Greeter.GreeterClient client)
         {
             var result = await client.SendValidateEnvironmentTypeRequestAsync(new ValidateEnvironmentTypeRequest { EnvironmentTypeID = environmentTypeID });
             return result.Status;
         }
-
         private async Task<bool> ValidateLevelTypeAsync(byte levelTypeID, Greeter.GreeterClient client)
         {
             var result = await client.SendValidateLevelTypeRequestAsync(new ValidateLevelTypeRequest {LevelTypeID = levelTypeID });

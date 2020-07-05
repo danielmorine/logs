@@ -49,7 +49,7 @@ namespace reg.Controllers
 
         [HttpGet]
         [Route("id/{id}")]
-        public async Task<IActionResult> GetById([FromRoute] Guid id)
+        public async Task<IActionResult> GetByIdAsync([FromRoute] Guid id)
         {
             try
             {
@@ -64,5 +64,43 @@ namespace reg.Controllers
                 return BadRequest(ex.Message);
             }            
         }
+
+        [HttpPut]
+        [Route("archive")]
+        public async Task<IActionResult> ArchiveAsync([FromBody] RegistrationProcessArchiveModel model)
+        {
+            try
+            {
+                await _service.ArchiveAsync(model);
+                return Ok();
+            }
+            catch (CustomException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpDelete]
+        public async Task<IActionResult> DeleteAsync([FromBody] RegistrationProcessDeleteModel model)
+        {
+            try
+            {
+                await _service.DeleteAsync(model);
+                return Ok();
+            }
+            catch (CustomException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
     }
 }

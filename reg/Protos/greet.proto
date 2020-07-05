@@ -14,6 +14,8 @@ service Greeter {
   rpc SendGetAllRegistrationProcess (GetAllRegistrationProcessRequest) returns (GetAllRegistrationProcessResponse);
   rpc GetByIdRegistrationProcess (GetByIdRegistrationProcessRequest) returns (GetByIdRegistrationProcessResponse);
   rpc ValidateRegistrationProcessId (ValidateRegistrationProcessIdRequest) returns (DefaultResponse); 
+  rpc Archive (ArchiveRequest) returns (DefaultResponse);
+  rpc Delete (DeleteRequest) returns (DefaultResponse);
 
 }
 
@@ -85,3 +87,20 @@ message GetByIdRegistrationProcessResponse {
 message ValidateRegistrationProcessIdRequest {
 	string registrationProcessID = 1;
 }
+
+message ArchiveRequest {
+	repeated ArchiveRequestObject list = 1;
+}
+
+message ArchiveRequestObject {
+	string id = 1;
+}
+
+message DeleteRequest {
+	repeated ArchiveRequestObject list = 1;
+}
+
+message DeleteRequestObject {
+	string id = 1;		 
+}
+
