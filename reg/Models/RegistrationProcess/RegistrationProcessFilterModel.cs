@@ -2,8 +2,8 @@
 {
     public class RegistrationProcessFilterModel
     {
-        public int? EnvFilter { get; set; }
-        public int? LevelFilter { get; set; }
+        public int? EnvironmentTypeID { get; set; }
+        public int? LevelTypeID { get; set; }
         public string OrderBy { get; set; }
         public string SortDirection { get; set; }
         public string SearchType { get; set; }

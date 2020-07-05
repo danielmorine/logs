@@ -41,8 +41,8 @@ namespace reg.Services
                 var client = new Greeter.GreeterClient(channel);
                 var reply = await client.FilterRegistrationProcessAsync(new FilterRegistrationProcessRequest 
                 {
-                    EnvFilter = model.EnvFilter.HasValue ? model.EnvFilter.ToString() : string.Empty,
-                    LevelFilter = model.LevelFilter.HasValue ? model.LevelFilter.ToString() : string.Empty,
+                    EnvFilter = model.EnvironmentTypeID.HasValue ? model.EnvironmentTypeID.ToString() : string.Empty,
+                    LevelFilter = model.LevelTypeID.HasValue ? model.LevelTypeID.ToString() : string.Empty,
                     OrderBy = string.IsNullOrEmpty(model.OrderBy) ? string.Empty : model.OrderBy,
                     SearchType = string.IsNullOrEmpty(model.SearchType) ? string.Empty : model.SearchType,
                     SearchValue = string.IsNullOrEmpty(model.SearchValue) ? string.Empty : model.SearchValue,
