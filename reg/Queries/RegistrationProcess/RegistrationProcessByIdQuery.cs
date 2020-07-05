@@ -13,5 +13,6 @@ namespace reg.Queries.RegistrationProcess
 		public string Details { get; set; }
 		public Guid OwnerID { get; set; }
 		public string EnvironmentTypeName { get; set; }
+		public string UserName { get; set; }
 	}
 }

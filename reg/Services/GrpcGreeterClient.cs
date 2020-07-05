@@ -154,6 +154,8 @@ namespace reg.Services
             
             CultureInfo cult = new CultureInfo("pt-BR");
 
+            var user = await _userManager.FindByIdAsync(reply.OwnerID);
+
             return new RegistrationProcessByIdQuery
             {
                 CreatedDate = DateTimeOffset.Parse(reply.CreatedDate).ToLocalTime().ToString("dd/MM/yyyy HH:mm:ss", cult),
@@ -164,7 +166,8 @@ namespace reg.Services
                 OwnerID = Guid.Parse(reply.OwnerID),
                 RegistrationProcessID = Guid.Parse(reply.RegistrationProcessID),
                 ReportSource = reply.ReportSource,
-                Title = reply.Title,                 
+                Title = reply.Title,
+                UserName = user.Name
             };
 
         }
