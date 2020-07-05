@@ -21,6 +21,7 @@ namespace reg.Services
         Task<RegistrationProcessByIdQuery> GetByID(Guid? RegistrationProcessID);
         Task ArchiveAsync(RegistrationProcessArchiveModel model);
         Task DeleteAsync(RegistrationProcessDeleteModel model);
+        Task<IEnumerable<RegistrationProcessQuery>> GetByFiltersAsync(RegistrationProcessFilterModel model);
 
     }
     public class GrpcGreeterClient : IGrpcGreeterClient
@@ -32,9 +33,47 @@ namespace reg.Services
         {
             _userManager = userManager;
         }
+
+        public async Task<IEnumerable<RegistrationProcessQuery>> GetByFiltersAsync(RegistrationProcessFilterModel model)
+        {
+            using (var channel = GrpcChannel.ForAddress(_url))
+            {
+                var client = new Greeter.GreeterClient(channel);
+                var reply = await client.FilterRegistrationProcessAsync(new FilterRegistrationProcessRequest 
+                {
+                    EnvFilter = model.EnvFilter.HasValue ? model.EnvFilter.ToString() : string.Empty,
+                    LevelFilter = model.LevelFilter.HasValue ? model.LevelFilter.ToString() : string.Empty,
+                    OrderBy = string.IsNullOrEmpty(model.OrderBy) ? string.Empty : model.OrderBy,
+                    SearchType = string.IsNullOrEmpty(model.SearchType) ? string.Empty : model.SearchType,
+                    SearchValue = string.IsNullOrEmpty(model.SearchValue) ? string.Empty : model.SearchValue,
+                    SortDirection = string.IsNullOrEmpty(model.SortDirection) ? string.Empty : model.SortDirection                    
+                });
+
+                var list = new List<RegistrationProcessQuery>();
+                CultureInfo cult = new CultureInfo("pt-BR");
+
+                if (reply.List.ToArray().Length > 0)
+                {
+                    foreach (var value in reply.List.ToArray())
+                    {
+                        list.Add(new RegistrationProcessQuery
+                        {
+                            EnvironmentTypeName = value.EnvironmentTypeName,
+                            Events = value.Events,
+                            LevelTypeName = value.LevelTypeName,
+                            ReportDescription = value.ReportDescription,
+                            ReportSource = value.ReportSource,
+                            RegistrationProcessID = Guid.Parse(value.RegistrationProcessID),
+                            CreatedDate = DateTimeOffset.Parse(value.CreatedDate).ToLocalTime().ToString("dd/MM/yyyy HH:mm:ss", cult)
+                        });
+                    }
+                }
+                return list;
+            }
+        }
         public async Task ArchiveAsync(RegistrationProcessArchiveModel model)
         {
-            using var channel = GrpcChannel.ForAddress("https://localhost:5001");
+            using var channel = GrpcChannel.ForAddress(_url);
             var client = new Greeter.GreeterClient(channel);
 
             await ValidateArrayList(model, client);

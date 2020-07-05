@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using reg.Exceptions;
 using reg.Models.RegistrationProcess;
+using reg.Scaffolds;
 using reg.Services;
 
 namespace reg.Controllers
@@ -91,6 +92,24 @@ namespace reg.Controllers
             {
                 await _service.DeleteAsync(model);
                 return Ok();
+            }
+            catch (CustomException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPost]
+        [Route("filters")]
+        public async Task<IActionResult> GetByFiltersAsync([FromBody] RegistrationProcessFilterModel model)
+        {
+            try
+            {
+                return Ok(await _service.GetByFiltersAsync(model));
             }
             catch (CustomException ex)
             {

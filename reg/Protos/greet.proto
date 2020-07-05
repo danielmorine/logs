@@ -16,7 +16,7 @@ service Greeter {
   rpc ValidateRegistrationProcessId (ValidateRegistrationProcessIdRequest) returns (DefaultResponse); 
   rpc Archive (ArchiveRequest) returns (DefaultResponse);
   rpc Delete (DeleteRequest) returns (DefaultResponse);
-
+  rpc FilterRegistrationProcess (FilterRegistrationProcessRequest) returns (GetAllRegistrationProcessResponse);
 }
 
 // The request message containing the user's name.
@@ -104,3 +104,11 @@ message DeleteRequestObject {
 	string id = 1;		 
 }
 
+message FilterRegistrationProcessRequest {
+	string envFilter = 1;
+	string levelFilter = 2;
+	string orderBy = 3;
+	string sortDirection = 4;
+	string searchType = 5;
+	string searchValue = 6;
+}
