@@ -1,9 +1,15 @@
-﻿using Grpc.Net.Client;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.EntityFrameworkCore.Design;
+﻿using Google.Protobuf;
+using Grpc.Net.Client;
+using Microsoft.AspNetCore.Identity;
 using reg.Exceptions;
 using reg.Models.RegistrationProcess;
+using reg.Queries.RegistrationProcess;
 using regGRPC;
+using Scaffolds;
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace reg.Services
@@ -12,9 +18,19 @@ namespace reg.Services
     {
         Task Say();
         Task AddRegistrationProcessAsync(RegistrationProcessModel model);
+        Task<IEnumerable<RegistrationProcessQuery>> GetAllAsync();
+        Task<RegistrationProcessByIdQuery> GetByID(Guid? RegistrationProcessID);
     }
     public class GrpcGreeterClient : IGrpcGreeterClient
     {
+        private readonly string _url = "https://localhost:5001";
+        private readonly UserManager<ApplicationUser> _userManager;
+
+        public GrpcGreeterClient(UserManager<ApplicationUser> userManager)
+        {
+            _userManager = userManager;
+        }
+
         public async Task AddRegistrationProcessAsync(RegistrationProcessModel model)
         {
             using var channel = GrpcChannel.ForAddress("https://localhost:5001");
@@ -49,7 +65,75 @@ namespace reg.Services
             //var reply = await client.SayHelloAsync(new HelloRequest { Name = "GreeterClient" });
             //var daniel = reply;        
         }
-       
+
+        public async Task<RegistrationProcessByIdQuery> GetByID(Guid? registrationProcessID)
+        {
+            if (!registrationProcessID.HasValue)
+            {
+                throw new CustomException("Não identificamos o id informado, tente novamente");
+            }
+            using var channel = GrpcChannel.ForAddress(_url);
+            var client = new Greeter.GreeterClient(channel);
+
+            await ValidateRegistrationProcessID(registrationProcessID.Value, client);
+
+            var reply = await client.
+                GetByIdRegistrationProcessAsync(new GetByIdRegistrationProcessRequest { RegistrationProcessID = registrationProcessID.ToString() });
+            
+            CultureInfo cult = new CultureInfo("pt-BR");
+
+            return new RegistrationProcessByIdQuery
+            {
+                CreatedDate = DateTimeOffset.Parse(reply.CreatedDate).ToLocalTime().ToString("dd/MM/yyyy HH:mm:ss", cult),
+                Details = reply.Details,
+                EnvironmentTypeName = reply.EnvironmentTypeName,
+                Events = reply.Events,
+                LevelTypeName = reply.LevelTypeName,
+                OwnerID = Guid.Parse(reply.OwnerID),
+                RegistrationProcessID = Guid.Parse(reply.RegistrationProcessID),
+                ReportSource = reply.ReportSource,
+                Title = reply.Title,                 
+            };
+
+        }
+
+        public async Task<IEnumerable<RegistrationProcessQuery>> GetAllAsync()
+        {
+            using var channel = GrpcChannel.ForAddress(_url);
+            var client = new Greeter.GreeterClient(channel);
+
+            var reply = await client.SendGetAllRegistrationProcessAsync(new GetAllRegistrationProcessRequest { });
+
+            var list = new List<RegistrationProcessQuery>();
+            CultureInfo cult = new CultureInfo("pt-BR");
+
+            if (reply.List.ToArray().Length > 0)
+            {
+                foreach (var value in reply.List.ToArray())
+                {
+                    list.Add(new RegistrationProcessQuery
+                    {
+                        EnvironmentTypeName = value.EnvironmentTypeName,
+                        Events = value.Events,
+                        LevelTypeName = value.LevelTypeName,
+                        ReportDescription = value.ReportDescription,
+                        ReportSource = value.ReportSource,
+                        RegistrationProcessID = Guid.Parse(value.RegistrationProcessID),
+                        CreatedDate = DateTimeOffset.Parse(value.CreatedDate).ToLocalTime().ToString("dd/MM/yyyy HH:mm:ss", cult)
+                    });
+                }
+            }
+            return list;
+        }
+        private async Task ValidateRegistrationProcessID(Guid registrationProcessID, Greeter.GreeterClient client)
+        {
+            var reply = await client.ValidateRegistrationProcessIdAsync(new ValidateRegistrationProcessIdRequest {  RegistrationProcessID = registrationProcessID.ToString()});
+
+            if (!reply.Status)
+            {
+                throw new CustomException("O id informado não existe, verifique o dado digitado");
+            }
+        }
         private async Task ValidateModel(RegistrationProcessModel model, Greeter.GreeterClient client)
         {
             if (model == null)
@@ -87,6 +171,5 @@ namespace reg.Services
             var result = await client.SendValidateLevelTypeRequestAsync(new ValidateLevelTypeRequest {LevelTypeID = levelTypeID });
             return result.Status;
         }
-
     }
 }

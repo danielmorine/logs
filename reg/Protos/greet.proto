@@ -11,6 +11,10 @@ service Greeter {
   rpc SendRegistrationProcess (RegistrationProcessRequest) returns (DefaultResponse);
   rpc SendValidateEnvironmentTypeRequest (ValidateEnvironmentTypeRequest) returns (DefaultResponse);
   rpc SendValidateLevelTypeRequest (ValidateLevelTypeRequest) returns (DefaultResponse);
+  rpc SendGetAllRegistrationProcess (GetAllRegistrationProcessRequest) returns (GetAllRegistrationProcessResponse);
+  rpc GetByIdRegistrationProcess (GetByIdRegistrationProcessRequest) returns (GetByIdRegistrationProcessResponse);
+  rpc ValidateRegistrationProcessId (ValidateRegistrationProcessIdRequest) returns (DefaultResponse); 
+
 }
 
 // The request message containing the user's name.
@@ -43,4 +47,41 @@ message ValidateEnvironmentTypeRequest {
 
 message ValidateLevelTypeRequest {
 	int32 levelTypeID = 1;
+}
+
+message GetAllRegistrationProcessRequest {
+}
+
+message GetAllRegistrationProcessResponse {
+	repeated GetAllRegistrationProcessObject list = 1;
+}
+
+message GetAllRegistrationProcessObject {
+	string reportDescription = 1;
+	string reportSource = 2;
+	string levelTypeName = 3;
+	string environmentTypeName = 4;
+	int32 events = 5;
+	string registrationProcessID = 6;
+	string createdDate = 7;
+}
+
+message GetByIdRegistrationProcessRequest {
+	string registrationProcessID = 1;
+}
+
+message GetByIdRegistrationProcessResponse {
+	string reportSource = 1;
+	string levelTypeName = 2;
+	int32 events = 3;
+	string registrationProcessID = 4;
+	string createdDate = 5;
+	string title = 6;
+	string details = 7;
+	string ownerID = 8;
+	string environmentTypeName = 9;
+}
+
+message ValidateRegistrationProcessIdRequest {
+	string registrationProcessID = 1;
 }

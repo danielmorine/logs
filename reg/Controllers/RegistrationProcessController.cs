@@ -27,7 +27,7 @@ namespace reg.Controllers
         {
             try
             {
-                model.OwnerID = Guid.Parse(User.Identity.Name);
+                model.OwnerID = Guid.Parse(User.Identity.Name);                
                 await _service.AddRegistrationProcessAsync(model);
                 return Ok();
             }
@@ -39,6 +39,30 @@ namespace reg.Controllers
             {
                 return BadRequest(ex.Message);
             }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAllAsync()
+        {            
+            return Ok(await _service.GetAllAsync());
+        }
+
+        [HttpGet]
+        [Route("id/{id}")]
+        public async Task<IActionResult> GetById([FromRoute] Guid id)
+        {
+            try
+            {
+                return Ok(await _service.GetByID(id));
+            }
+            catch (CustomException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }            
         }
     }
 }
