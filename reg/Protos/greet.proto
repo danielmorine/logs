@@ -36,7 +36,8 @@ message RegistrationProcessRequest {
 	int32 levelTypeID = 4;
 	int32 events = 5;
 	int32 environmentTypeID = 6;
-	string OwnerID = 7;
+	string ownerID = 7;
+	string details = 8;
 }
 
 message DefaultResponse { 

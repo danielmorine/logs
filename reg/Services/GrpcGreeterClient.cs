@@ -119,19 +119,20 @@ namespace reg.Services
             using var channel = GrpcChannel.ForAddress("https://localhost:5001");
             var client = new Greeter.GreeterClient(channel);
 
-            await ValidateModel(model, client);            
+            await ValidateModel(model, client);
 
-            var reply = await client.SendRegistrationProcessAsync( 
-                new RegistrationProcessRequest 
-                { 
+            var reply = await client.SendRegistrationProcessAsync(
+                new RegistrationProcessRequest
+                {
                     EnvironmentTypeID = model.EnvironmentTypeID.Value,
                     Events = model.Events.Value,
                     LevelTypeID = model.LevelTypeID.Value,
                     OwnerID = model.OwnerID.ToString(),
                     ReportDescription = model.ReportDescription,
                     ReportSource = model.ReportSource,
-                    Title = model.Title
-                });
+                    Title = model.Title,
+                    Details = model.Details,
+                }) ;
 
             if (!reply.Status)
             {
@@ -255,6 +256,18 @@ namespace reg.Services
             } else if (!await ValidateLevelTypeAsync(model.LevelTypeID.Value, client))
             {
                 throw new CustomException("O valor de LevelTypeID não é válido");
+            } else if (model.Title.Length > 50)
+            {
+                throw new CustomException("Título pode ter até 50 caracteres");
+            } else if (model.ReportDescription.Length > 1000)
+            {
+                throw new CustomException("Descrição pode ter até 1000 caracteres");
+            } else if (model.ReportSource.Length > 150)
+            {
+                throw new CustomException("Origem pode ter até 150 caracteres");
+            } else if (model.Details.Length > 5000)
+            {
+                throw new CustomException("Detalhes pode ter até 5000 caracteres");
             }
         }
         private async Task<bool> ValidateEnvironmentTypeAsync(byte environmentTypeID, Greeter.GreeterClient client)

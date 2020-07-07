@@ -11,5 +11,6 @@ namespace reg.Models.RegistrationProcess
         public int? Events { get; set; }
         public Guid? OwnerID { get; set; }
         public byte? EnvironmentTypeID { get; set; }
+        public string Details { get; set; }
     }
 }
