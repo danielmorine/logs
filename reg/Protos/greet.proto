@@ -112,4 +112,5 @@ message FilterRegistrationProcessRequest {
 	string sortDirection = 4;
 	string searchType = 5;
 	string searchValue = 6;
+	bool isActive = 7;
 }

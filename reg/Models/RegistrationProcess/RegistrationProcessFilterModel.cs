@@ -8,5 +8,6 @@
         public string SortDirection { get; set; }
         public string SearchType { get; set; }
         public string SearchValue { get; set; }
+        public int? IsActive { get; set; }
     }
 }

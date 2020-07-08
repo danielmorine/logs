@@ -42,15 +42,16 @@ namespace reg.Services
 
                 await ValidateFilters(model, client);
 
-                var reply = await client.FilterRegistrationProcessAsync(new FilterRegistrationProcessRequest 
+                var reply = await client.FilterRegistrationProcessAsync(new FilterRegistrationProcessRequest
                 {
                     EnvFilter = model.EnvironmentTypeID.HasValue ? model.EnvironmentTypeID.ToString() : string.Empty,
                     LevelFilter = model.LevelTypeID.HasValue ? model.LevelTypeID.ToString() : string.Empty,
                     OrderBy = string.IsNullOrEmpty(model.OrderBy) ? string.Empty : model.OrderBy,
                     SearchType = string.IsNullOrEmpty(model.SearchType) ? string.Empty : model.SearchType,
                     SearchValue = string.IsNullOrEmpty(model.SearchValue) ? string.Empty : model.SearchValue,
-                    SortDirection = string.IsNullOrEmpty(model.SortDirection) ? string.Empty : model.SortDirection                    
-                });
+                    SortDirection = string.IsNullOrEmpty(model.SortDirection) ? string.Empty : model.SortDirection,
+                    IsActive = model.IsActive.HasValue && model.IsActive.Value == 1
+                }); ;
 
                 var list = new List<RegistrationProcessQuery>();
                 CultureInfo cult = new CultureInfo("pt-BR");
@@ -303,6 +304,9 @@ namespace reg.Services
             } else if (!string.IsNullOrEmpty(model.SearchType) && !model.SearchType.ToLower().Equals("reportsource") && !model.SearchType.ToLower().Equals("reportdescription"))
             {
                 throw new CustomException("O campo SearchType aceita apenas dois valores: reportSource ou reportDescription");
+            } else if (model.IsActive.HasValue && model.IsActive > 1)
+            {
+                throw new CustomException("O campo IsActive aceita apenas os valores: 0 e 1");
             }
         }
     }
