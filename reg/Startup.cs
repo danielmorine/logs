@@ -1,3 +1,6 @@
+using Certes;
+using FluffySpoon.AspNet.EncryptWeMust;
+using FluffySpoon.AspNet.EncryptWeMust.Certes;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -17,6 +20,7 @@ namespace reg
 {
     public class Startup
     {
+        public string DomainToUse = "testewebssl.ddns.net";
         public Startup(IConfiguration configuration, IWebHostEnvironment env)
         {
             Configuration = configuration;
@@ -32,6 +36,30 @@ namespace reg
 
         public void ConfigureServices(IServiceCollection services)
         {
+            //the following line adds the automatic renewal service.
+            services.AddFluffySpoonLetsEncrypt(new LetsEncryptOptions()
+            {
+                Email = "contato.danielharo@gmail.com", //LetsEncrypt will send you an e-mail here when the certificate is about to expire
+                UseStaging = false, //switch to true for testing
+                Domains = new[] { DomainToUse },
+                TimeUntilExpiryBeforeRenewal = TimeSpan.FromDays(30), //renew automatically 30 days before expiry
+                TimeAfterIssueDateBeforeRenewal = TimeSpan.FromDays(7), //renew automatically 7 days after the last certificate was issued
+                CertificateSigningRequest = new CsrInfo() //these are your certificate details
+                {
+                    CountryName = "Brazil",
+                    Locality = "SP",
+                    Organization = "Student",
+                    OrganizationUnit = "Student",
+                    State = "SP"
+                }
+            });
+
+            //the following line tells the library to persist the certificate to a file, so that if the server restarts, the certificate can be re-used without generating a new one.
+            services.AddFluffySpoonLetsEncryptFileCertificatePersistence();
+
+            //the following line tells the library to persist challenges in-memory. challenges are the "/.well-known" URL codes that LetsEncrypt will call.
+
+            services.AddFluffySpoonLetsEncryptMemoryChallengePersistence();
             services.AddSwaggerGen(c => {
 
                 c.SwaggerDoc("v1",
