@@ -50,7 +50,7 @@ namespace reg.Services
                     SearchType = string.IsNullOrEmpty(model.SearchType) ? string.Empty : model.SearchType,
                     SearchValue = string.IsNullOrEmpty(model.SearchValue) ? string.Empty : model.SearchValue,
                     SortDirection = string.IsNullOrEmpty(model.SortDirection) ? string.Empty : model.SortDirection,
-                    IsActive = model.IsActive.HasValue && model.IsActive.Value == 1
+                    IsActive = !model.IsActive.HasValue || model.IsActive.Value != 0,
                 }); ;
 
                 var list = new List<RegistrationProcessQuery>();
