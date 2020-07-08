@@ -18,7 +18,7 @@ namespace reg.Controllers
         {
             _loginService = loginService;
         }
-
+       
         [HttpPost]
         public async Task<IActionResult> PostAsync([FromBody] LoginModel model)
         {

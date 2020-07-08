@@ -23,13 +23,12 @@ namespace Scaffolds
             }
         }
 
+
         public string Name { get; set; }
         public DateTimeOffset CreatedDate { get; set; }
 
         [NotMapped]
         public string PasswordComparer { get; set; }
-
-        public virtual RegistrationProcess RegistrationProcess { get; set; }
 
     }
 }

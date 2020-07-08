@@ -7,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using reg.Extensions.IOC;
 using Scaffolds;
 using System;
@@ -31,6 +32,22 @@ namespace reg
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddSwaggerGen(c => {
+
+                c.SwaggerDoc("v1",
+                    new OpenApiInfo
+                    {
+                        Title = "Central de Erros",
+                        Version = "v1",
+                        Description = "API REST criada com o ASP.NET Core 3.1 para criação e consulta de logs",
+                        Contact = new OpenApiContact
+                        {
+                            Name = "Daniel Haro",
+                            Url = new Uri("https://github.com/danielmorine")
+                        }
+                    });
+            });
+
             services.AddControllers();
 
             services.AddDbContext<ApplicationDbContext>(options =>
@@ -84,6 +101,11 @@ namespace reg
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseSwagger();
+
+            app.UseSwaggerUI(c => {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "API V1");
+            });
             app.UseHttpsRedirection();
 
             app.UseRouting();

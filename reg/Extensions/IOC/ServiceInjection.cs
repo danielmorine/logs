@@ -13,6 +13,7 @@ namespace reg.Extensions.IOC
             services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<UserManager<ApplicationUser>>();
+            services.AddScoped<IGrpcGreeterClient, GrpcGreeterClient>();
             return services;
         }
     }
