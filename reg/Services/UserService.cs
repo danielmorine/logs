@@ -15,12 +15,10 @@ namespace reg.Services
     }
     public class UserService : IUserService
     {
-        private readonly UserManager<ApplicationUser> _userManager;
         private readonly IApplicationUserRepository _applicationUserRepository;
 
-        public UserService(UserManager<ApplicationUser> userManager, IApplicationUserRepository applicationUserRepository)
+        public UserService(IApplicationUserRepository applicationUserRepository)
         {
-            _userManager = userManager;
             _applicationUserRepository = applicationUserRepository;
         }
         public async Task AddAsync(UserModelCreate model)
