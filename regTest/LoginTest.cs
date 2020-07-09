@@ -55,15 +55,7 @@ namespace regTest
 
             var loginService = new LoginService(tokenService, mockSigIn.Object, mockUserManager.Object);
 
-            try
-            {
-                await loginService.LoginAsync(new reg.Models.Login.LoginModel { Email = email, Password = "Teste@123" });
-            }
-            catch (Exception ex)
-            {
-
-                throw;
-            }
+            
 
         }
 
