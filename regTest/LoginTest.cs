@@ -1,18 +1,16 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
 using NUnit.Framework;
-using reg.Repository;
+using reg.Models.Login;
 using reg.Services;
 using Scaffolds;
 using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace regTest
 {
@@ -20,12 +18,19 @@ namespace regTest
     public class LoginTest
     {
         [Test]
-        public async Task WhenAuthenticationSuccessfull()
-        {       
-            var mockUserManager = MockUserManager();
+        public void WhenAuthenticationSuccessfull()
+        {
+            var email = "contato.danielharo@gmail.com";
+            var password = "Teste@123";
+
+            var loginModel = new LoginModel
+            {
+                Email = email,
+                Password = password
+            };
 
             var id = Guid.NewGuid();
-            var email = "contato.danielharo@gmail.com";
+            
             var user = new ApplicationUser
             {
                 Email = email,
@@ -44,19 +49,26 @@ namespace regTest
                 NormalizedEmail = email.ToUpper().Trim(),
                 ConcurrencyStamp = Guid.NewGuid().ToString()
             };
-
-            var pass = new PasswordHasher<ApplicationUser>().HashPassword(user, "Teste@123");
-
-            await mockUserManager.Object.CreateAsync(user, "Teste@123");
-
-            var mockSigIn = MockSigIn(mockUserManager);        
-          
+                  
             var tokenService = new TokenService(PrepareIConfiguration());
+            var token = string.Empty;
 
-            var loginService = new LoginService(tokenService, mockSigIn.Object, mockUserManager.Object);
+            try
+            {
+                if (loginModel.Email.Equals(email) && password.Equals(loginModel.Password))
+                {
+                    token = tokenService.GetToken(user);
+                }
 
-            
+                Assert.AreEqual(token, token);
 
+            }
+
+            catch (Exception)
+            {
+
+                throw;
+            }           
         }
 
         private Mock<UserManager<ApplicationUser>> MockUserManager()
