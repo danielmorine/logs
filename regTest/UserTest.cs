@@ -86,7 +86,6 @@ namespace regTest
             });
 
             await mock.Object.SaveChangeAsync();
-
             var userService = new UserService(mock.Object);
 
             try
