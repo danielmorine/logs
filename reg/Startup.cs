@@ -54,12 +54,12 @@ namespace reg
                 }
             });
 
-            //the following line tells the library to persist the certificate to a file, so that if the server restarts, the certificate can be re-used without generating a new one.
-            services.AddFluffySpoonLetsEncryptFileCertificatePersistence();
+            ////the following line tells the library to persist the certificate to a file, so that if the server restarts, the certificate can be re-used without generating a new one.
+            //services.AddFluffySpoonLetsEncryptFileCertificatePersistence();
 
-            //the following line tells the library to persist challenges in-memory. challenges are the "/.well-known" URL codes that LetsEncrypt will call.
+            ////the following line tells the library to persist challenges in-memory. challenges are the "/.well-known" URL codes that LetsEncrypt will call.
 
-            services.AddFluffySpoonLetsEncryptMemoryChallengePersistence();
+            //services.AddFluffySpoonLetsEncryptMemoryChallengePersistence();
             services.AddSwaggerGen(c => {
 
                 c.SwaggerDoc("v1",
