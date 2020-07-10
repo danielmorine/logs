@@ -138,6 +138,8 @@ namespace reg
 
             app.UseRouting();
 
+            app.UseRequestLocalization();
+
             app.UseAuthentication();
 
             app.UseAuthorization();
