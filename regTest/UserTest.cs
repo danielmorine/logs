@@ -1,5 +1,6 @@
 using Moq;
 using NUnit.Framework;
+using reg.Exceptions;
 using reg.Repository;
 using reg.Services;
 using System;
@@ -36,9 +37,10 @@ namespace regTest
             {
                 await userService.AddAsync(new reg.Models.User.UserModelCreate { Email = "contato.danielharo@gmail.com", Password = "Teste@123" });
             }
-            catch (Exception ex)
+            catch (CustomException ex)
             {
-                Assert.AreEqual("Nome, Email e senha são campos obrigatórios", ex.Message);
+                var message = "Nome, Email e senha são campos obrigatórios";
+                Assert.AreEqual(message, ex.Message);
             }
         }
 
@@ -53,9 +55,10 @@ namespace regTest
             {
                 await userService.AddAsync(null);
             }
-            catch (Exception ex)
+            catch (CustomException ex)
             {
-                Assert.AreEqual("Não foi possível criar este usuário", ex.Message);
+                var message = "Não foi possível criar este usuário";
+                Assert.AreEqual(message, ex.Message);
             }
         }
 
@@ -92,9 +95,10 @@ namespace regTest
             {
                 await userService.AddAsync(new reg.Models.User.UserModelCreate { Email = "contato.danielharo@gmail.com", Name = "Teste", Password = "Teste@123" });
             }
-            catch (Exception ex)
+            catch (CustomException ex)
             {
-                Assert.AreEqual("Este email já existe, utilize outro", ex.Message);
+                var message = "Este email já existe, utilize outro";
+                Assert.AreEqual(message, ex.Message);
             }
         }
     }
