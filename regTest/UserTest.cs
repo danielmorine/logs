@@ -38,7 +38,8 @@ namespace regTest
             }
             catch (Exception ex)
             {
-                Assert.AreEqual("Nome, Email e senha são campos obrigatórios", ex.Message);
+                var messageException = ex.Message.Replace("ã", "a").Replace("ó", "o");
+                Assert.AreEqual("Nome, Email e senha sao campos obrigatorios", messageException);
             }
         }
 
@@ -55,7 +56,8 @@ namespace regTest
             }
             catch (Exception ex)
             {
-                Assert.AreEqual("Não foi possível criar este usuário", ex.Message);
+                var messageException = ex.Message.Replace("ã", "a").Replace("í", "i").Replace("á", "a");
+                Assert.AreEqual("Nao foi possivel criar este usuario", messageException);
             }
         }
 
@@ -94,7 +96,8 @@ namespace regTest
             }
             catch (Exception ex)
             {
-                Assert.AreEqual("Este email já existe, utilize outro", ex.Message);
+                var messageException = ex.Message.Replace("á", "a");
+                Assert.AreEqual("Este email ja existe, utilize outro", messageException);
             }
         }
     }
