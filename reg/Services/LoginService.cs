@@ -28,7 +28,7 @@ namespace reg.Services
 
         public async Task<string> LoginAsync(LoginModel model)
         {
-            var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, true, true);
+            var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, true, true);            
             if (result == null)
             {
                 throw new CustomException("Email ou senha inválida");
