@@ -26,8 +26,8 @@ namespace reg
             Configuration = configuration;
 
             var builder = new ConfigurationBuilder()
-            .SetBasePath(env.ContentRootPath)
-            .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+            .SetBasePath(AppContext.BaseDirectory)
+            .AddJsonFile("appsettings.json");
 
             Configuration = builder.Build();
         }
@@ -115,9 +115,9 @@ namespace reg
                     ValidateLifetime = true,
                     ClockSkew = TimeSpan.Zero,
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.
-                    ASCII.GetBytes(Configuration.GetValue<string>("TokenConfiguration:Secret"))),
-                    ValidAudience = Configuration.GetValue<string>("TokenConfiguration:Audience"),
-                    ValidIssuer = Configuration.GetValue<string>("TokenConfiguration:Issuer")
+                    ASCII.GetBytes(Configuration["TokenConfiguration:Secret"])),
+                    ValidAudience = Configuration["TokenConfiguration:Audience"],
+                    ValidIssuer = Configuration["TokenConfiguration:Issuer"]
                 };                
             });
         }
@@ -134,7 +134,7 @@ namespace reg
             app.UseSwaggerUI(c => {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "API V1");
             });
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
 
             app.UseRouting();
 
