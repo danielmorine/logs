@@ -21,7 +21,7 @@ namespace reg
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    webBuilder.UseUrls(new string[] { "http://*", "https://*" });
+                    webBuilder.UseUrls(new string[] { "http://regcodenation.ddns.net", "https://regcodenation.ddns.net" });
                     webBuilder.UseStartup<Startup>();
                 });
     }

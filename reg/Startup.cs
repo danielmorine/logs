@@ -20,7 +20,7 @@ namespace reg
 {
     public class Startup
     {
-        public string DomainToUse = "testewebssl.ddns.net";
+        public string DomainToUse = "regcodenation.ddns.net";
         public Startup(IConfiguration configuration, IWebHostEnvironment env)
         {
             Configuration = configuration;
