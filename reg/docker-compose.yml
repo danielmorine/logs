@@ -7,7 +7,6 @@ services:
         ports:
             - '20000:80'
             - '20001:443'
-            - '20002:5005'
         depends_on:
             - api  
             - grpc            
@@ -21,9 +20,7 @@ services:
             dockerfile: Dockerfile
         ports:
             - '5000:80'
-            - '5001:443' 
-        depends_on:
-            - grpc                   
+            - '5001:443'                        
         networks:
             - apicontagem-network
     grpc:
@@ -31,7 +28,7 @@ services:
             context: /loggrpc/regGRPC
             dockerfile: Dockerfile
         ports:
-            - '5005:5001'
+            - '20002:80'
         networks:
             - apicontagem-network
 networks:
