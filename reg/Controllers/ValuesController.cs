@@ -29,7 +29,16 @@ namespace reg.Controllers
         [Route("call")]
         public async Task<IActionResult> GetMessage()
         {
-            return Ok(await _client.CallAsync());
+            try
+            {
+                return Ok(await _client.CallAsync());
+
+            }
+            catch (Exception ex)
+            {
+
+                return BadRequest(ex.Message);
+            }
         }
     }
 }
