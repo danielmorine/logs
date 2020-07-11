@@ -27,9 +27,12 @@ services:
         build:
             context: /loggrpc/regGRPC
             dockerfile: Dockerfile
+    	stdin_open: true
+    	tty: true
         ports:
             - '20002:80'
             - '20003:443'
+            - '20004:5001'
         networks:
             - apicontagem-network
 networks:
