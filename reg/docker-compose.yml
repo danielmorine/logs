@@ -30,7 +30,7 @@ services:
             context: /loggrpc/regGRPC
             dockerfile: Dockerfile
         ports:
-            - '5005:80'
+            - '5005:5001'
         networks:
             - apicontagem-network
 networks:
