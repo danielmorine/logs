@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using reg.Services;
 
 namespace reg.Controllers
 {
@@ -15,6 +16,14 @@ namespace reg.Controllers
         public IActionResult Get()
         {
             return Ok("values");
+        }
+
+
+        [HttpGet]
+        [Route("call")]
+        public async Task<IActionResult> GetMessage([FromServices] GrpcGreeterClient client)
+        {
+            return Ok(await client.CallAsync());
         }
     }
 }

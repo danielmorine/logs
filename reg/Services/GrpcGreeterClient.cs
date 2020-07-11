@@ -22,7 +22,7 @@ namespace reg.Services
         Task ArchiveAsync(RegistrationProcessArchiveModel model);
         Task DeleteAsync(RegistrationProcessDeleteModel model);
         Task<IEnumerable<RegistrationProcessQuery>> GetByFiltersAsync(RegistrationProcessFilterModel model);
-
+        Task<string> CallAsync();
     }
     public class GrpcGreeterClient : IGrpcGreeterClient
     {
@@ -32,6 +32,16 @@ namespace reg.Services
         public GrpcGreeterClient(UserManager<ApplicationUser> userManager)
         {
             _userManager = userManager;
+        }
+
+        public async Task<string> CallAsync()
+        {
+            using var channel = GrpcChannel.ForAddress(_url);
+            var client = new Greeter.GreeterClient(channel);
+
+            var reply = await client.CallGRPCAsync(new CallRequest { });
+
+            return reply.Reponse;
         }
 
         public async Task<IEnumerable<RegistrationProcessQuery>> GetByFiltersAsync(RegistrationProcessFilterModel model)

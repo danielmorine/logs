@@ -17,6 +17,13 @@ service Greeter {
   rpc Archive (ArchiveRequest) returns (DefaultResponse);
   rpc Delete (DeleteRequest) returns (DefaultResponse);
   rpc FilterRegistrationProcess (FilterRegistrationProcessRequest) returns (GetAllRegistrationProcessResponse);
+  rpc CallGRPC (CallRequest) returns (CallResponse);
+}
+message CallRequest {
+
+}
+message CallResponse {
+	string reponse = 1;
 }
 
 // The request message containing the user's name.
