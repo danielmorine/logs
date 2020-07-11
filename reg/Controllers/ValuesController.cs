@@ -12,6 +12,12 @@ namespace reg.Controllers
     [ApiController]
     public class ValuesController : ControllerBase
     {
+        private readonly IGrpcGreeterClient _client;
+        public ValuesController(IGrpcGreeterClient client)
+        {
+            _client = client;
+        }
+
         [HttpGet]
         public IActionResult Get()
         {
@@ -21,9 +27,9 @@ namespace reg.Controllers
 
         [HttpGet]
         [Route("call")]
-        public async Task<IActionResult> GetMessage([FromServices] GrpcGreeterClient client)
+        public async Task<IActionResult> GetMessage()
         {
-            return Ok(await client.CallAsync());
+            return Ok(await _client.CallAsync());
         }
     }
 }
