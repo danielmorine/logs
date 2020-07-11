@@ -44,8 +44,16 @@ namespace reg.Controllers
 
         [HttpGet]
         public async Task<IActionResult> GetAllAsync()
-        {            
-            return Ok(await _service.GetAllAsync());
+        {
+            try
+            {
+                return Ok(await _service.GetAllAsync());
+
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpGet]

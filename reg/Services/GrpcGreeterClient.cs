@@ -97,7 +97,7 @@ namespace reg.Services
         }
         public async Task DeleteAsync(RegistrationProcessDeleteModel model)
         {
-            using var channel = GrpcChannel.ForAddress("https://localhost:5001");
+            using var channel = GrpcChannel.ForAddress(_url);
             var client = new Greeter.GreeterClient(channel);
 
             await ValidateArrayList(model, client);
@@ -117,7 +117,7 @@ namespace reg.Services
         }
         public async Task AddRegistrationProcessAsync(RegistrationProcessModel model)
         {
-            using var channel = GrpcChannel.ForAddress("https://localhost:5001");
+            using var channel = GrpcChannel.ForAddress(_url);
             var client = new Greeter.GreeterClient(channel);
 
             await ValidateModel(model, client);
