@@ -26,7 +26,7 @@ namespace reg.Services
     }
     public class GrpcGreeterClient : IGrpcGreeterClient
     {
-        private readonly string _url = "https://localhost:5005";
+        private readonly string _url = "https://regcodenation.ddns.net:20002";
         private readonly UserManager<ApplicationUser> _userManager;
 
         public GrpcGreeterClient(UserManager<ApplicationUser> userManager)

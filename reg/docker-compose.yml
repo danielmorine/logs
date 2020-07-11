@@ -7,8 +7,10 @@ services:
         ports:
             - '20000:80'
             - '20001:443'
+            - '20002:5005'
         depends_on:
-            - api              
+            - api  
+            - grpc            
         networks:
             - apicontagem-network
         volumes:
@@ -24,7 +26,6 @@ services:
             - grpc                   
         networks:
             - apicontagem-network
-
     grpc:
         build:
             context: /loggrpc/regGRPC
