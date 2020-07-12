@@ -29,7 +29,7 @@ services:
             - '20002:80'
             - '20003:443'
             - '20004:5000'
-            - '20005:5001'		
+            - '20005:5001'	
         build:
             context: /loggrpc/regGRPC
             dockerfile: Dockerfile        
