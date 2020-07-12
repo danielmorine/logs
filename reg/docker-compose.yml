@@ -24,7 +24,7 @@ services:
             - apicontagem-network
     grpc:
         stdin_open: true
-        tty: true	
+        tty: true
         build:
             context: /loggrpc/regGRPC
             dockerfile: Dockerfile
