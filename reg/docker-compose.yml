@@ -24,15 +24,15 @@ services:
             - apicontagem-network
     grpc:
         stdin_open: true
-        tty: true
+        tty: true	
+        build:
+            context: /loggrpc/regGRPC
+            dockerfile: Dockerfile
         ports:
             - '20002:80'
             - '20003:443'
             - '20004:5000'
-            - '20005:5001'	
-        build:
-            context: /loggrpc/regGRPC
-            dockerfile: Dockerfile        
+            - '20005:5001'
         networks:
             - apicontagem-network
 networks:
