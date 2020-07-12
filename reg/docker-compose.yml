@@ -12,10 +12,24 @@ services:
         networks:
             - apicontagem-network
         volumes:
-            - /etc/letsencrypt/:/etc/letsencrypt/   
+            - /etc/letsencrypt/:/etc/letsencrypt/
+    api:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        ports:
+            - '5000:80'
+            - '5001:443'                        
+        networks:
+            - apicontagem-network
     grpc:
         stdin_open: true
         tty: true
+        ports:
+            - '20002:80'
+            - '20003:443'
+            - '20004:5000'
+            - '20005:5001'		
         build:
             context: /loggrpc/regGRPC
             dockerfile: Dockerfile        

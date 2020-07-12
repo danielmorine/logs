@@ -1,4 +1,5 @@
 ﻿using Google.Protobuf;
+using Grpc.Core.Interceptors;
 using Grpc.Net.Client;
 using Microsoft.AspNetCore.Identity;
 using reg.Exceptions;
@@ -11,6 +12,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
+
 
 namespace reg.Services
 {
@@ -26,7 +28,7 @@ namespace reg.Services
     }
     public class GrpcGreeterClient : IGrpcGreeterClient
     {
-        private readonly string _url = "localhost:20000";
+        private readonly string _url = "https://regcodenation.ddns.net:5001";
         private readonly UserManager<ApplicationUser> _userManager;
 
         public GrpcGreeterClient(UserManager<ApplicationUser> userManager)
@@ -36,6 +38,9 @@ namespace reg.Services
 
         public async Task<string> CallAsync()
         {
+            
+
+
             using var channel = GrpcChannel.ForAddress(_url);
             var client = new Greeter.GreeterClient(channel);
 
