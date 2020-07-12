@@ -10,7 +10,7 @@ services:
         depends_on:           
             - grpc            
         networks:
-            - apicontagem-network
+            - api-network
         volumes:
             - /etc/letsencrypt/:/etc/letsencrypt/
     api:
@@ -21,7 +21,7 @@ services:
             - '5000:80'
             - '5001:443'                        
         networks:
-            - apicontagem-network
+            - api-network
     grpc:
         stdin_open: true
         tty: true
@@ -34,7 +34,7 @@ services:
             - '20004:5000'
             - '20005:5001'
         networks:
-            - apicontagem-network
+            - api-network
 networks:
-    apicontagem-network:
+    api-network:
         driver: bridge
