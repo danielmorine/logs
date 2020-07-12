@@ -28,7 +28,7 @@ namespace reg.Services
     }
     public class GrpcGreeterClient : IGrpcGreeterClient
     {
-        private readonly string _url = "https://regcodenation.ddns.net:5001";
+        private readonly string _url = "http://regcodenation.ddns.net:20005";
         private readonly UserManager<ApplicationUser> _userManager;
 
         public GrpcGreeterClient(UserManager<ApplicationUser> userManager)
@@ -38,9 +38,7 @@ namespace reg.Services
 
         public async Task<string> CallAsync()
         {
-            
-
-
+            AppContext.SetSwitch("System.Net.Http.SocketsHttpHandler.Http2UnencryptedSupport", true);
             using var channel = GrpcChannel.ForAddress(_url);
             var client = new Greeter.GreeterClient(channel);
 
