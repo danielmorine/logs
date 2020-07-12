@@ -1,5 +1,4 @@
-﻿using Google.Protobuf;
-using Grpc.Net.Client;
+﻿using Grpc.Net.Client;
 using Microsoft.AspNetCore.Identity;
 using reg.Exceptions;
 using reg.Models.RegistrationProcess;
@@ -12,6 +11,7 @@ using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 
+
 namespace reg.Services
 {
     public interface IGrpcGreeterClient
@@ -22,16 +22,27 @@ namespace reg.Services
         Task ArchiveAsync(RegistrationProcessArchiveModel model);
         Task DeleteAsync(RegistrationProcessDeleteModel model);
         Task<IEnumerable<RegistrationProcessQuery>> GetByFiltersAsync(RegistrationProcessFilterModel model);
-
+        Task<string> CallAsync();
     }
     public class GrpcGreeterClient : IGrpcGreeterClient
     {
-        private readonly string _url = "https://localhost:5001";
+        private readonly string _url = "http://regcodenation.ddns.net:20005";
         private readonly UserManager<ApplicationUser> _userManager;
 
         public GrpcGreeterClient(UserManager<ApplicationUser> userManager)
         {
+            AppContext.SetSwitch("System.Net.Http.SocketsHttpHandler.Http2UnencryptedSupport", true);
             _userManager = userManager;
+        }
+
+        public async Task<string> CallAsync()
+        {            
+            using var channel = GrpcChannel.ForAddress(_url);
+            var client = new Greeter.GreeterClient(channel);
+
+            var reply = await client.CallGRPCAsync(new CallRequest { });
+
+            return reply.Reponse;
         }
 
         public async Task<IEnumerable<RegistrationProcessQuery>> GetByFiltersAsync(RegistrationProcessFilterModel model)
@@ -97,7 +108,7 @@ namespace reg.Services
         }
         public async Task DeleteAsync(RegistrationProcessDeleteModel model)
         {
-            using var channel = GrpcChannel.ForAddress("https://localhost:5001");
+            using var channel = GrpcChannel.ForAddress(_url);
             var client = new Greeter.GreeterClient(channel);
 
             await ValidateArrayList(model, client);
@@ -117,7 +128,7 @@ namespace reg.Services
         }
         public async Task AddRegistrationProcessAsync(RegistrationProcessModel model)
         {
-            using var channel = GrpcChannel.ForAddress("https://localhost:5001");
+            using var channel = GrpcChannel.ForAddress(_url);
             var client = new Greeter.GreeterClient(channel);
 
             await ValidateModel(model, client);
