@@ -17,4 +17,5 @@ gRPC;
 Let's Encrypt;
 Nginx;
 VM Azure;
+SQL Azure;
 
